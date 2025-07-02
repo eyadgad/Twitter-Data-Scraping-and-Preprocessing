@@ -57,7 +57,6 @@ for from_account in from_accounts:
     since_step = since_date
     k=0
 
-    
     for i, until_step in enumerate(date_range(start, end, 15)):
         if until_step == since_step:continue
 
