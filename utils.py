@@ -1,4 +1,4 @@
-import pandas as pd, datetime
+import pandas as pd, datetime, re, os, time, csv
 
 def calc_n_splits(since, until, interval):
     if interval <= 1 or not interval: return -1
@@ -68,3 +68,20 @@ def save_dict_to_csv(data_dict, path):
             file.write(row)
     print(f"Data saved to {path}")
 
+def extract_id_from_url(url):
+    match = re.search(r'status/(\d+)', str(url))
+    return match.group(1) if match else None
+
+def merge_csv_files(tweets_files, final_csv_file):
+        header_written = False
+        with open(final_csv_file, 'w', newline='', encoding='utf-8') as fout:
+            writer = None
+            for csv_file in tweets_files:
+                with open(csv_file, 'r', encoding='utf-8') as fin:
+                    reader = csv.reader(fin)
+                    header = next(reader)
+                    if not header_written:
+                        writer = csv.writer(fout)
+                        writer.writerow(header)
+                        header_written = True
+                    for row in reader: writer.writerow(row)
