@@ -120,8 +120,6 @@ for from_account in from_accounts:
 
     # replace with your actual file list
     final_csv_file = f"{from_account}_tweets.csv"
-
-    # Flag to write header only once
     merge_csv_files(tweets_files, final_csv_file)
 
     df = pd.read_csv(final_csv_file, dtype={"tweetId": str})
@@ -132,13 +130,12 @@ for from_account in from_accounts:
         lambda row: row['url_id'] if row['url_id'] and row['tweetId'] != row['url_id'] else row['tweetId'],
         axis=1
     )
-    # replace \n with space in Text column
+
     df['Text'] = df['Text'].str.replace('\n', ' ', regex=False)
     df['Text'] = df['Text'].str.replace('\r', ' ', regex=False)
     df['Text'] = df['Text'].str.replace('http', ' http', regex=False)
 
 
-    # Drop the helper column
     df.drop(columns=['url_id'], inplace=True)
     df.drop(columns=['Embedded_text'], inplace=True, errors='ignore')
     df.drop(columns=['Emojis'], inplace=True, errors='ignore')
